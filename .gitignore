@@ -264,3 +264,7 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,intellij+all,gradle,maven,java,eclipse
 
 .env
+
+### Docker Info ###
+docker/**/data
+docker/**/log
