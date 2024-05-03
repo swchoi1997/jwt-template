@@ -1,0 +1,31 @@
+version: '3'
+services:
+  mysql-template:
+    image: mysql:8.0
+    container_name: mysql-template
+    hostname: mysql-template
+    ports:
+      - "11306:3306"
+    volumes:
+      - ./source/data:/var/lib/mysql
+      - ./source/log:/var/log/mysql
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: oracle
+      MYSQL_DATABASE: template
+    restart: always
+
+  redis-template:
+    image: redis:latest
+    container_name: redis-template
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    restart: always
+
