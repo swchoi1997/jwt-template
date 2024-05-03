@@ -1,0 +1,28 @@
+spring:
+  application.name: jwt-template
+  profiles:
+    include: auth
+
+  datasource:
+    hikari:
+      primary:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:11306/jwt
+        username: root
+        password: oracle
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 참고 https://github.com/KoEonYack/Tistory-Covenant-Code/tree/main/spring-hexagonal-architecture
