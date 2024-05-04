@@ -32,11 +32,10 @@ public class TimeAuditInterceptor implements Interceptor {
         final MappedStatement mappedStatement = (MappedStatement) args[0];
         final Object paramMap = args[1];
 
+        // Check Insert, Update Query's Target Field
+        // Set ParamMap Current Time
         if (paramMap != null) {
-            //Check Insert, Update Query's Target Field
-            final List<String> targetFields = TimeAuditingField.searchTargetFields(mappedStatement.getSqlCommandType());
-
-            // Set ParamMap Current Time
+            final List<String> targetFields = TimeAuditingType.searchTargetFields(mappedStatement.getSqlCommandType());
             this.setParamMap(paramMap, targetFields, LocalDateTime.now());
         }
 

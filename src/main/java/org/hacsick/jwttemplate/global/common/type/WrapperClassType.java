@@ -14,6 +14,7 @@ public enum WrapperClassType {
     BYTE(Byte.class),
     BOOLEAN(Boolean.class),
     CHARACTER(Character.class),
+    STRING(String.class),
     ;
 
     private static final Set<Class<?>> WRAPPER_CLASS_TYPES = Collections.unmodifiableSet(

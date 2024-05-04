@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.hacsick.jwttemplate.global.common.ApplicationConstant;
+import org.hacsick.jwttemplate.global.intercepter.AnnotationTimeAuditInterceptor;
 import org.hacsick.jwttemplate.global.intercepter.TimeAuditInterceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -41,7 +42,8 @@ public class MybatisConfig {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(primaryDataSource);
         sqlSessionFactoryBean.setPlugins(new Interceptor[]{
-                new TimeAuditInterceptor()
+//                new TimeAuditInterceptor()
+                new AnnotationTimeAuditInterceptor()
         });
         sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:/mapper/**/*.xml"));
 
