@@ -102,9 +102,6 @@ public class AnnotationTimeAuditInterceptor implements Interceptor {
             superclass = superclass.getSuperclass();
         }
 
-        Method[] methods = DateFormat.class.getMethods();
-        final String dateFormatName = methods[0].getName();
-
         for (Field field : fields) {
             final List<Annotation> declaredAnnotations = Arrays.stream(field.getDeclaredAnnotations()).toList();
             if (declaredAnnotations.isEmpty()) continue;
@@ -113,11 +110,13 @@ public class AnnotationTimeAuditInterceptor implements Interceptor {
                     .filter(annotation -> annotation.annotationType().equals(targetAnnotation))
                     .forEach(annotation -> {
                         try {
-                            Method method = annotation.annotationType().getMethod(dateFormatName);
-                            assert method != null;
                             field.setAccessible(true);
 
                             if (field.getType().equals(WrapperClassType.STRING.getClazzType())) {
+                                final String dateFormatName = DateFormat.class.getMethods()[0].getName();
+                                Method method = annotation.annotationType().getMethod(dateFormatName);
+                                assert method != null;
+
                                 field.set(param, value.format(DATE_TIME_FORMATTER_MAP.get((TimeFormatType) method.invoke(annotation)))); // 필드 값 설정
                                 return;
                             }
