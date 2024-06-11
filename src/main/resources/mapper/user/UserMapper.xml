@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hacsick.jwttemplate.global.user.adapter.out.persistence.UserMapper">
+    <select id="getUserFromEmail" resultType="org.hacsick.jwttemplate.global.user.domain.User">
+        SELECT id,
+               email,
+               name,
+               password,
+               role,
+               phone_number,
+               enabled
+        FROM TB_USER
+        WHERE email = #{email}
+        ;
+    </select>
+
+    <insert id="saveUser"
+            parameterType="org.hacsick.jwttemplate.global.user.domain.User">
+        INSERT INTO TB_USER
+        (
+            email,
+            name,
+            password,
+            role,
+            phone_number,
+            enabled,
+            created_at,
+            modified_at
+        )
+        VALUES (
+                   #{email},
+                   #{name},
+                   #{password},
+                   #{role},
+                   #{phoneNumber},
+                   #{enabled},
+                   #{createdAt},
+                   #{modifiedAt}
+               );
+    </insert>
+
+    <update id="withdraw" parameterType="map">
+        UPDATE TB_USER
+        SET email = #{user.email},
+            name = #{user.name},
+            password = #{user.password},
+            role = #{user.role},
+            phone_number = #{user.phoneNumber},
+            enabled = #{user.enabled},
+            modified_at = #{user.modifiedAt}
+        WHERE email = #{email}
+    </update>
+</mapper>

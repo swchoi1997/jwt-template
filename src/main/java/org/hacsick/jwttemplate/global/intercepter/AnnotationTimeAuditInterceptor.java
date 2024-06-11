@@ -2,6 +2,7 @@ package org.hacsick.jwttemplate.global.intercepter;
 
 import static org.hacsick.jwttemplate.global.utils.time.TimeFormatType.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -36,6 +38,8 @@ import org.hacsick.jwttemplate.global.utils.time.TimeFormatType;
 })
 public class AnnotationTimeAuditInterceptor implements Interceptor {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public Object intercept(final Invocation invocation) throws Throwable {
         final Object[] args = invocation.getArgs();
@@ -44,6 +48,9 @@ public class AnnotationTimeAuditInterceptor implements Interceptor {
 
         // Check Insert, Update Query's Target Field
         // Set ParamMap Current Time
+        if (this.isPrimitiveType(optionalParamMap.get().getClass())) {
+            return invocation.proceed();
+        }
         optionalParamMap.ifPresent(paramMap -> this.setParamMap(paramMap,
                 TimeAuditingType.searchTargetAnnotations(mappedStatement.getSqlCommandType()),
                 LocalDateTime.now()));
@@ -52,17 +59,13 @@ public class AnnotationTimeAuditInterceptor implements Interceptor {
     }
 
     private void setParamMap(Object paramMap, List<Class<? extends Annotation>> targets, LocalDateTime value) {
-        final ParamMap<Object> paramMap1 = (ParamMap<Object>) paramMap;
-        final Collection<Object> params = paramMap1.values();
+        this.setParam(paramMap, targets, value);
 
-        params.forEach(param -> this.setParam(param, targets, value));
     }
 
     private <T> void setParam(final Object param, List<Class<? extends Annotation>> targets, LocalDateTime value) {
         Class<?> clazz = param.getClass();
-        if (this.isPrimitiveType(clazz)) {
-            return;
-        }
+
         if (this.isWrapperClassType(clazz)) {
             if (this.isCollectionType(clazz)) {
                 Collection param1 = (Collection) param;
@@ -80,9 +83,6 @@ public class AnnotationTimeAuditInterceptor implements Interceptor {
                                         final List<Class<? extends Annotation>> targets,
                                         final LocalDateTime value) {
         //Check Collection Generic Is Java Type
-        if (this.isPrimitiveType(collectionGenericType)) {
-            return;
-        }
         if (this.isWrapperClassType(collectionGenericType)) {
             if (this.isCollectionType(collectionGenericType)) {
                 Collection param1 = (Collection) param;

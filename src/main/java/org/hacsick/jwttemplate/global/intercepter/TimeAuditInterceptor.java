@@ -43,10 +43,7 @@ public class TimeAuditInterceptor implements Interceptor {
     }
 
     private void setParamMap(Object paramMap, List<String> fieldNames, LocalDateTime value) {
-        final ParamMap<Object> paramMap1 = (ParamMap<Object>) paramMap;
-        final Collection<Object> params = paramMap1.values();
-
-        params.forEach(param -> this.setParam(param, fieldNames, value));
+        this.setParam(paramMap, fieldNames, value);
     }
 
     private <T> void setParam(final Object param, List<String> fieldNames, LocalDateTime value) {
